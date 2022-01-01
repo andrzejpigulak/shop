@@ -10,6 +10,7 @@ import pl.andrzej.shop.model.dao.User;
 import pl.andrzej.shop.repository.RoleRepository;
 import pl.andrzej.shop.repository.UserRepository;
 import pl.andrzej.shop.security.SecurityUtils;
+import pl.andrzej.shop.service.MailService;
 import pl.andrzej.shop.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,12 +23,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final MailService mailService;
 
     @Override
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singletonList(role)));
-        return userRepository.save(user); //save - sprawdza czy w user pole id jest ustawione Tak - select czy w bazie istnieje obiekt o takim id jak istnieje to robi update a jak nie to insert
+        userRepository.save(user);//save - sprawdza czy w user pole id jest ustawione Tak - select czy w bazie istnieje obiekt o takim id jak istnieje to robi update a jak nie to insert
+        mailService.sendEmail(Collections.singletonMap("link", "abcd"), "registerConfirmationMail", user.getEmail());
+        return user;
     }
 
     @Transactional
