@@ -11,5 +11,19 @@ spring:
       fail-on-empty-beans: false
   flyway:
     baselineOnMigrate: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pigulak.andrzej
+    password: '!@#123asd'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            requierd: true
+        transport:
+          protocol: smtp
 file:
   product: C:\Users\Dell\IdeaProjects\files
