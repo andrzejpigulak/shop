@@ -2,6 +2,7 @@ package pl.andrzej.shop.model.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(indexes = @Index(name = "idx_name", columnList = "name", unique = true))
+@NoArgsConstructor
 public class Template {
 
     @Id

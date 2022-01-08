@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singletonList(role)));
         userRepository.save(user);//save - sprawdza czy w user pole id jest ustawione Tak - select czy w bazie istnieje obiekt o takim id jak istnieje to robi update a jak nie to insert
-        mailService.sendEmail(Collections.singletonMap("link", "abcd"), "registerConfirmationMail", user.getEmail());
+        mailService.sendEmail(Collections.singletonMap("link", "http://localhost:8080/api/users/confirm?token=token"), "registerConfirmationMail", user.getEmail());
         return user;
     }
 
