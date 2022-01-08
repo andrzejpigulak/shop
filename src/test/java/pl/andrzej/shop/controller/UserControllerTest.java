@@ -17,6 +17,8 @@ import pl.andrzej.shop.model.dto.UserDto;
 import pl.andrzej.shop.repository.UserRepository;
 import spock.util.mop.Use;
 
+import javax.transaction.Transactional;
+
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc //tworzy beana który pozwala wysyłać requesty na endpointy controllera
 @ActiveProfiles("test") //test dajemy bazując na nazwie naszego yaml-a to co jest po myślniku application-test
 @TestPropertySource(locations = "classpath:application-test.yml") // classpath oznacza folder resources. Chodzi o podanie pliku konfiguracyjnego w adnotacji
+@Transactional
 class UserControllerTest {
 
     @Autowired
@@ -99,7 +102,9 @@ class UserControllerTest {
                                 .confirmPassword("b1s2d3f")
                                 .build())))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").doesNotExist());
+                .andExpect(jsonPath("$.length()").value("1"))
+                .andExpect(jsonPath("$.[*].field",containsInAnyOrder("saveUser.user")))
+                .andExpect(jsonPath("$.[*].message", containsInAnyOrder("Confirm password should be the same")));
 
     }
 
@@ -370,7 +375,7 @@ class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     void shouldNotDeleteUserByIdWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/api/users/1"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 }

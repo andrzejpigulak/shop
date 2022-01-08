@@ -80,8 +80,7 @@ class ProductControllerTest {
                             processor.setMethod(HttpMethod.POST.name());
                             return processor;
                         }))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(""));
+                .andExpect(status().isBadRequest());
     }
 
     @Test

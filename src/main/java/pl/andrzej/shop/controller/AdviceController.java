@@ -2,6 +2,7 @@ package pl.andrzej.shop.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,5 +63,11 @@ public class AdviceController {
         if (Objects.requireNonNull(d.getMessage()).contains("user"))
             return new ErrorDto("User already exist");
         return new ErrorDto("Data already exist");
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleEntityNotFoundException(EmptyResultDataAccessException e) {
+        log.error("", e);
     }
 }
