@@ -12,6 +12,7 @@ spring:
     serialization:
       fail-on-empty-beans: false
   flyway:
+    # enabled: false
     baselineOnMigrate: true
   mail:
     host: smtp.gmail.com
